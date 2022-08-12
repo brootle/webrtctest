@@ -1,6 +1,6 @@
 
 
-require('chromedriver');
+// require('chromedriver');
 
 const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
 
@@ -28,18 +28,30 @@ function sleep(ms) {
 
     let options = new chrome.Options().headless();
 
-    let driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();    
+    // browser = webdriver.Chrome(executable_path="./drivers/chromedriver", options=chromeOptions)
+
+    const service = new chrome.ServiceBuilder('./usr/bin/chromedriver');
+
+    const driver = new webdriver.Builder().forBrowser('chrome').setChromeService(service).setChromeOptions(options).build();    
 
     //let driver = new webdriver.Builder().forBrowser('chrome').build(); 
 
-    await driver.get('http://127.0.0.1:8887/');
+    await driver.get('https://www.google.com');
 
-    await driver.findElement(By.id('url')).sendKeys(streamUrl)
+    let title = await driver.getTitle();
 
-    console.log("wait 5 seconds")
-    await sleep(5000)
-    console.log("click start")
+    console.log("title: ", title)
 
-    await driver.findElement(By.id('start')).click()
+    await driver.manage().setTimeouts({ implicit: 5000 });
+
+    // await driver.get('http://127.0.0.1:8887/');
+
+    // await driver.findElement(By.id('url')).sendKeys(streamUrl)
+
+    // console.log("wait 5 seconds")
+    // await sleep(5000)
+    // console.log("click start")
+
+    // await driver.findElement(By.id('start')).click()
 
   })();

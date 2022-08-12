@@ -30,10 +30,10 @@ function sleep(ms) {
 
     // browser = webdriver.Chrome(executable_path="./drivers/chromedriver", options=chromeOptions)
 
-    // const service = new chrome.ServiceBuilder('./usr/bin/chromedriver');
-    // const driver = new webdriver.Builder().forBrowser('chrome').setChromeService(service).setChromeOptions(options).build();    
+    const service = new chrome.ServiceBuilder('/usr/bin/chromedriver');
+    const driver = new webdriver.Builder().forBrowser('chrome').setChromeService(service).setChromeOptions(options).build();    
 
-    const driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();    
+    //const driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();    
 
     //let driver = new webdriver.Builder().forBrowser('chrome').build(); 
 

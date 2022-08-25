@@ -1,12 +1,9 @@
-
-
-// require('chromedriver');
-
-const {Builder, Browser, By, Key, until} = require('selenium-webdriver');
-
+const {Builder, By} = require('selenium-webdriver');
 const webdriver = require('selenium-webdriver');
-
 const chrome = require('selenium-webdriver/chrome');
+require("chromedriver");
+
+var fs = require('fs');
 
 function sleep(ms) {
   return new Promise((resolve) => {
@@ -14,45 +11,36 @@ function sleep(ms) {
   })
 }
 
-(async function example() {
-
-
-    let streamUrl = process.argv[2]
-
-    console.log("streamUrl:", streamUrl)
-
-    // let driver = await new Builder().forBrowser(Browser.CHROME).build();
-
-    // const service = new chrome.ServiceBuilder('C:');
-    // const driver = await new Builder().forBrowser('chrome').setChromeService(service).build();    
+(async () => {
+  
+    //let driver = await new Builder().forBrowser('chrome').build();
 
     let options = new chrome.Options().headless();
 
-    // browser = webdriver.Chrome(executable_path="./drivers/chromedriver", options=chromeOptions)
+    const driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();   
 
-    const service = new chrome.ServiceBuilder('/usr/bin/chromedriver');
-    const driver = new webdriver.Builder().forBrowser('chrome').setChromeService(service).setChromeOptions(options).build();    
+    const url = "https://ovenplayer.netlify.app/"
+    const streamUrl = process.argv[2]    
 
-    //const driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();    
+    await driver.get(url);
 
-    //let driver = new webdriver.Builder().forBrowser('chrome').build(); 
+    await driver.findElement(By.id('url')).sendKeys(streamUrl);
 
-    await driver.get('https://www.google.com');
+    await sleep(5000)
+    console.log("click start")
 
-    let title = await driver.getTitle();
+    await driver.findElement(By.id('start')).click()
 
-    console.log("title: ", title)
+    await sleep(10000)
+    console.log("Making screenshot")
+    driver.takeScreenshot().then(
+      function(image, err) {
+        //Screenshot will be saved under current directory with name myscreenshot.png
+        fs.writeFile("myscreenshot.png", image, "base64", function(error) {
+        if(error!=null)
+          console.log("Error occured while saving screenshot" + error);
+        });
+      }
+    );
 
-    await driver.manage().setTimeouts({ implicit: 5000 });
-
-    // await driver.get('http://127.0.0.1:8887/');
-
-    // await driver.findElement(By.id('url')).sendKeys(streamUrl)
-
-    // console.log("wait 5 seconds")
-    // await sleep(5000)
-    // console.log("click start")
-
-    // await driver.findElement(By.id('start')).click()
-
-  })();
+})();

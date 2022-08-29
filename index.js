@@ -1,6 +1,7 @@
 const {Builder, By} = require('selenium-webdriver');
 const webdriver = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
+const {Logger, Preferences, installConsoleHandler} = require('selenium-webdriver/lib/logging');
 require("chromedriver");
 
 var fs = require('fs');
@@ -12,12 +13,14 @@ function sleep(ms) {
 }
 
 (async () => {
-  
+
     //let driver = await new Builder().forBrowser('chrome').build();
 
-    let options = new chrome.Options().headless();
+    let options = new chrome.Options().headless()
 
     const driver = new webdriver.Builder().forBrowser('chrome').setChromeOptions(options).build();   
+
+    installConsoleHandler()
 
     const url = "https://ovenplayer.netlify.app/"
     const streamUrl = process.argv[2]    
@@ -42,5 +45,9 @@ function sleep(ms) {
         });
       }
     );
+
+    console.log("Wait for 100 seconds before closing")
+    await sleep(100000)
+  
 
 })();
